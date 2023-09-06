@@ -5,5 +5,7 @@ public class NNDemo {
         nn.setInput(new double[]{.5, .2, 5});
         nn.propagate();
         System.out.println(nn);
+        nn.reset();
+        System.out.println(nn);
     }
 }

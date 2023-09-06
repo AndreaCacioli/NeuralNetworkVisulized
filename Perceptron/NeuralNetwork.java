@@ -1,5 +1,6 @@
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Random;
 
 class NeuralNetwork{
     Neuron[][] layers;
@@ -12,6 +13,7 @@ class NeuralNetwork{
      * @param function the activation function of each neuron
      */
     public NeuralNetwork(int [] sizes, EvaluationFunction function){
+        Random r = new Random();
         weights = new Hashtable<>();
         biases = new Hashtable<>();
         layers = new Neuron[sizes.length][];
@@ -30,8 +32,8 @@ class NeuralNetwork{
                 weights.put(n, new Hashtable<>());
                 biases.put(n, new Hashtable<>());
                 for(Neuron np : prevLayer){
-                    weights.get(n).put(np, 1.0);
-                    biases.get(n).put(np, 0.0);
+                    weights.get(n).put(np, r.nextDouble(-3,3));
+                    biases.get(n).put(np, r.nextDouble(-3,3));
                 }
             }
         }
@@ -97,6 +99,14 @@ class NeuralNetwork{
             ret[i] = lastLayer[i].getActivationValue();
         }
         return ret;
+    }
+
+    public void reset(){
+        for(Neuron[] layer : layers){
+            for(Neuron n : layer){
+                n.setInput(0);
+            }
+        }
     }
 
     public String toString(){
