@@ -11,4 +11,7 @@ class Neuron {
     public double getActivationValue(){
         return activationFunction.evaluate(internalState);
     }
+    public void setInput(double internalState){
+        this.internalState = internalState;
+    }
 }
