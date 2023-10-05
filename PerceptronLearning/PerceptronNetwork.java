@@ -5,10 +5,21 @@ public class PerceptronNetwork extends NeuralNetwork {
 
     public PerceptronNetwork(int inputsNumber) {
         super(new int[] { inputsNumber, 1 }, new StepFunction());
+        for(Neuron n : layers[0]){
+            n.setActivationFunction(new IdentityFunction());
+        }
         theNeuron = layers[1][0];
         theNeuron.setBias(1);
     }
 
+    public void setExample(double [] example) throws Exception{
+        if (example.length - 1 != getInputsNumber()) {
+            throw new Exception("The dataset is not compatible in size with the network");
+        }
+        for (int i = 0; i < example.length - 1; i++) {
+            this.layers[0][i].setInput(example[i]);
+        }
+    }
     public double getBias() {
         return theNeuron.getBias();
     }
@@ -43,13 +54,12 @@ public class PerceptronNetwork extends NeuralNetwork {
     }
 
     private void adjustWeights(double[] unsatisfiedExample, double learningRate) {
-        System.out.println(unsatisfiedExample[0] + " " + unsatisfiedExample[1] + " -> " + unsatisfiedExample[2]
-                + "\toutput: " + getOutputs()[0]);
+        double wrongResult = getOutputs()[0];
         double[] modification = new double[unsatisfiedExample.length - 1];
         double target = unsatisfiedExample[unsatisfiedExample.length - 1];
         // Updating the bias
         double bias = theNeuron.getBias();
-        if (getOutputs()[0] > target) {
+        if (wrongResult > target) {
             theNeuron.setBias(bias - learningRate);
             System.out.println("Bias decreasing\t new bias: " + theNeuron.getBias());
         } else {
@@ -60,7 +70,7 @@ public class PerceptronNetwork extends NeuralNetwork {
         // Updating the weights
         for (int i = 0; i < modification.length; i++) {
             modification[i] = unsatisfiedExample[i] * learningRate;
-            if (getOutputs()[0] > target) {
+            if (wrongResult > target) {
                 // target is lower, we gotta lower the weights
                 modification[i] *= -1;
             }
@@ -82,8 +92,11 @@ public class PerceptronNetwork extends NeuralNetwork {
         if (example == null)
             return true;
         double target = example[example.length - 1];
-        for (int i = 0; i < example.length - 1; i++) {
-            this.layers[0][i].setInput(example[i]);
+        try{
+            setExample(example);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
         propagate();
         return Math.abs(this.getOutputs()[0] - target) < 0.001;

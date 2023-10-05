@@ -79,10 +79,10 @@ class NeuralNetwork{
             for (Neuron n : layer){
                 Double sum = 0.0;
                 for(Neuron nn : prevLayer){
-                    Double value = getWeight(nn, n) * nn.getActivationValue() + nn.getBias();
+                    Double value = getWeight(nn, n) * nn.getActivationValue();
                     sum += value;
                 }
-                n.setInput(sum/prevLayer.length);
+                n.setInput(sum);
             }
         }
     }

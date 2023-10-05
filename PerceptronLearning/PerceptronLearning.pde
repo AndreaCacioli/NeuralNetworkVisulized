@@ -12,13 +12,26 @@ double [][] andDataset = new double[][]{
     {0, 0, -1}
 };
 
-double[][] usedDataset = orDataset;
+double [][] bigDataset = new double[2000][];
+
+
+double[][] usedDataset = bigDataset;
 
 PerceptronNetwork p = new PerceptronNetwork(2);
 
-int pixelUnitMultiplier = 90; //Each unit is ninety pixels
+int pixelUnitMultiplier = 150; //Each unit is ninety pixels
 
 void setup(){
+    for(int i = 0 ; i < 1000; i++){
+        float val1 = random(-1, 0);
+        float val2 = random(-1, 0);
+        bigDataset[i] = new double[]{val1, val2, -1};
+    }
+    for(int i = 1000 ; i < 2000; i++){
+        float val1 = random(0, 1);
+        float val2 = random(0,1);
+        bigDataset[i] = new double[]{val1, val2, 1};
+    }
     size(700, 700);
     print(p);
 }
@@ -45,7 +58,7 @@ boolean done = false;
 void draw(){
     background(255);
     drawAxis();
-    drawDataset(usedDataset, 10);
+    drawDataset(usedDataset, 20);
     try{
         done = p.learnOneStep(usedDataset, 0.25);
     }
@@ -98,7 +111,7 @@ private void drawFunction(EvaluationFunction f)
         var mathCoordx = processing2Math(x, 123)[0];
         var mathCoordy = f.evaluate(mathCoordx);
         var processingCoords = math2Processing(mathCoordx, mathCoordy);
-        circle(processingCoords[0], processingCoords[1], 5);
+        circle(processingCoords[0], processingCoords[1], 2);
     }
 }
 

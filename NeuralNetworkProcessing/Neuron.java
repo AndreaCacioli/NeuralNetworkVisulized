@@ -7,6 +7,10 @@ class Neuron {
         this.activationFunction = f;
     }
 
+    public void setActivationFunction(EvaluationFunction f) {
+        this.activationFunction = f;
+    }
+
     public void setBias(double b) {
         bias = b;
     }
