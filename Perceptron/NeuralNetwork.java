@@ -5,7 +5,6 @@ import java.util.Random;
 class NeuralNetwork{
     Neuron[][] layers;
     Dictionary<Neuron, Dictionary<Neuron, Double>> weights;
-    Dictionary<Neuron, Dictionary<Neuron, Double>> biases;
 
     /**
      * 
@@ -15,7 +14,6 @@ class NeuralNetwork{
     public NeuralNetwork(int [] sizes, EvaluationFunction function){
         Random r = new Random();
         weights = new Hashtable<>();
-        biases = new Hashtable<>();
         layers = new Neuron[sizes.length][];
         int l = 0;
         for(int size : sizes){
@@ -30,10 +28,8 @@ class NeuralNetwork{
             Neuron[] prevLayer = layers[i-1];
             for(Neuron n : layer){
                 weights.put(n, new Hashtable<>());
-                biases.put(n, new Hashtable<>());
                 for(Neuron np : prevLayer){
                     weights.get(n).put(np, r.nextDouble() * 6 - 3);
-                    biases.get(n).put(np, r.nextDouble() * 6 - 3);
                 }
             }
         }
@@ -52,12 +48,12 @@ class NeuralNetwork{
      * 
      * @param a the neuron from which the connection starts
      * @param b the neuron a is connected to;
-     * @return the bias of that connection
+     * @return the weight of that connection
      */
-    public double getBias(Neuron a, Neuron b){
-        return biases.get(b).get(a);
+    protected void setWeight(Neuron a, Neuron b, double value){
+        weights.get(b).remove(a);
+        weights.get(b).put(a, value);
     }
-
     /**
      * 
      * @param inputs a set of values that we assign to the initial neurons
@@ -83,7 +79,7 @@ class NeuralNetwork{
             for (Neuron n : layer){
                 Double sum = 0.0;
                 for(Neuron nn : prevLayer){
-                    Double value = getWeight(nn, n) * nn.getActivationValue() + getBias(nn, n);
+                    Double value = getWeight(nn, n) * nn.getActivationValue() + nn.getBias();
                     sum += value;
                 }
                 n.setInput(sum/prevLayer.length);
