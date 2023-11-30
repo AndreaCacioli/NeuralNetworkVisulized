@@ -51,17 +51,20 @@ ax.set_zlabel("Z")
 # Set the title
 ax.set_title("Graph of a weird loss function")
 
-device = torch.device("cpu")
+if torch.has_cuda:
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
 
 p = torch.tensor([9.5, -8.0], device=device, requires_grad=True)
 p = torch.randn(2, device=device, requires_grad=False)
-p = p * 9.5
+p = p * 7.5
 p.requires_grad_(True)
 
 
 ps = []
 optim = torch.optim.Adam([p], lr=0.05)
-epochs = 1000
+epochs = 50
 
 for epoch in range(epochs):
     optim.zero_grad()
