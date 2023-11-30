@@ -8,16 +8,16 @@ BUMPS_HEIGHT = 5
 
 # Define the function
 def f(x, y):
-    return BUMPS_HEIGHT * (np.sin(x) * np.sin(y)) + SPREAD * (x**2 + y**2)
+    return BUMPS_HEIGHT * (np.sin(x) * np.cos(y)) + SPREAD * (x**2 + y**2)
 
 
 def f_t(x_tensor):
-    sinsin = torch.sin(x_tensor[0]) * torch.sin(x_tensor[1])
-    sinsin = sinsin * BUMPS_HEIGHT
+    sincos = torch.sin(x_tensor[0]) * torch.cos(x_tensor[1])
+    sincos = sincos * BUMPS_HEIGHT
     square = torch.square(x_tensor)
     square = square[0] + square[1]
     square = square * SPREAD
-    ret = sinsin + square
+    ret = sincos + square
     return ret
 
 
@@ -55,13 +55,13 @@ device = torch.device("cpu")
 
 p = torch.tensor([9.5, -8.0], device=device, requires_grad=True)
 p = torch.randn(2, device=device, requires_grad=False)
-p = p * 10
+p = p * 9.5
 p.requires_grad_(True)
 
 
 ps = []
 optim = torch.optim.Adam([p], lr=0.05)
-epochs = 2000
+epochs = 1000
 
 for epoch in range(epochs):
     optim.zero_grad()
