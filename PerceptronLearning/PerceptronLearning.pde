@@ -13,9 +13,10 @@ double [][] andDataset = new double[][]{
 };
 
 double [][] bigDataset = new double[2000][];
+double [][] randomDataset = new double[2000][];
 
 
-double[][] usedDataset = bigDataset;
+double[][] usedDataset = randomDataset;
 
 PerceptronNetwork p = new PerceptronNetwork(2);
 
@@ -26,11 +27,13 @@ void setup(){
         float val1 = random(-1, 0);
         float val2 = random(-1, 0);
         bigDataset[i] = new double[]{val1, val2, -1};
+        randomDataset[i] = new double[]{random(-2, 2), random(-2,2), 1};
     }
     for(int i = 1000 ; i < 2000; i++){
         float val1 = random(0, 1);
         float val2 = random(0,1);
         bigDataset[i] = new double[]{val1, val2, 1};
+        randomDataset[i] = new double[]{random(-2, 2), random(-2,2), -1};
     }
     size(700, 700);
     print(p);
@@ -58,7 +61,7 @@ boolean done = false;
 void draw(){
     background(255);
     drawAxis();
-    drawDataset(usedDataset, 20);
+    drawDataset(usedDataset, 7);
     try{
         done = p.learnOneStep(usedDataset, 0.25);
     }
